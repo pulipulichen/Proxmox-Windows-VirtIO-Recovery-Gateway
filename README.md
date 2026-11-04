@@ -11,6 +11,7 @@ Dedicated isolated recovery network: `172.22.30.1/24`; DHCP pool `172.22.30.100-
 ## API
 
 - `GET /health` returns JSON status.
+- `GET /virtio-recovery.json` returns the version 1 JSON host map consumed by the Recovery ISO, converting configured subnet masks to prefix lengths.
 - `GET /config/BC:24:11:AA:BB:01.toml` returns a single NIC TOML.
 - `POST /config` with `{"macs":["BC:24:11:AA:BB:01"]}` returns matching NIC configurations as JSON.
 

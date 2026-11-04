@@ -73,6 +73,28 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         if self.path == "/health":
             return self.respond(200, {"status": "ok"})
+        if self.path == "/virtio-recovery.json":
+            try:
+                hosts = load_hosts()
+                result = {}
+                for mac, item in hosts.items():
+                    if item["mode"] == "dhcp":
+                        result[mac] = {"mode": "dhcp"}
+                        continue
+                    network = ipaddress.IPv4Network("0.0.0.0/" + item["subnet_mask"])
+                    mapped = {
+                        "mode": "static",
+                        "address": item["ip"],
+                        "prefix": network.prefixlen,
+                    }
+                    for key in ("gateway", "dns"):
+                        if key in item:
+                            mapped[key] = item[key]
+                    result[mac] = mapped
+                return self.respond(200, {"version": 1, "hosts": result})
+            except Exception:
+                self.log_exception()
+                return self.respond(500, {"error": "configuration error"})
         if not (self.path.startswith("/config/") and self.path.endswith(".toml")):
             return self.respond(404, {"error": "not found"})
         try:

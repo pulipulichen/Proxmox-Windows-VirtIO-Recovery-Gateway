@@ -18,3 +18,11 @@
 - GitHub Contents API creates scripts without executable file mode; CT-local scripts were chmod +x, but git tree file modes need to be corrected for future clones.
 - Debian 13 systemd 257 emits a nesting warning; CT runs successfully with nesting disabled.
 - Initial attempt to create README.md failed because the new repository already contained README.md; updated it instead.
+
+
+## 2026-11-04 — Recovery ISO compatibility endpoint
+
+- Added `GET /virtio-recovery.json`, returning the Recovery ISO's version 1 JSON schema keyed by normalized MAC address.
+- Static entries expose `address`, CIDR `prefix`, optional `gateway` and `dns`; DHCP entries expose `mode: "dhcp"`. Existing TOML and POST JSON APIs are unchanged.
+- Validation: source review only; no Gateway CT or Windows VM deployment was performed for this change. Run `bash update.sh` in the CT before using a newly built ISO.
+- Release status: not released; no workflow run was available during the edit.
