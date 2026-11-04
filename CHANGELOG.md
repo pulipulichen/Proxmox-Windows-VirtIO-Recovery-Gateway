@@ -26,3 +26,12 @@
 - Static entries expose `address`, CIDR `prefix`, optional `gateway` and `dns`; DHCP entries expose `mode: "dhcp"`. Existing TOML and POST JSON APIs are unchanged.
 - Validation: source review only; no Gateway CT or Windows VM deployment was performed for this change. Run `bash update.sh` in the CT before using a newly built ISO.
 - Release status: not released; no workflow run was available during the edit.
+
+
+## 2026-11-04 — Deploy Recovery ISO endpoint to CT 900
+
+- The Gateway CT is isolated from GitHub DNS, so `bash update.sh` could not pull the public repository (`Could not resolve host: github.com`). No network setting was changed.
+- Copied the already committed `gateway/server.py` to CT 900 through the PVE host, after backing up the previous file to `/root/server.py.before-recovery-json.py`. Python bytecode compilation passed and `virtio-gateway` restarted to active.
+- Called `GET /virtio-recovery.json` from inside the CT and verified version 1 schema, three host mappings, both static and DHCP modes, and the required static address/prefix fields.
+- The CT remains offline and its Git working tree reports the deployed server file as modified relative to its older local checkout. The committed GitHub source is canonical; future offline updates can transfer the repo version through PVE, or use `update.sh` after GitHub DNS/network access is restored. The four shell scripts were restored executable after the failed pull attempt.
+- No Windows VM end-to-end test was performed.
