@@ -1,0 +1,18 @@
+[Unit]
+Description=Windows VirtIO Recovery MAC Configuration API
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /opt/virtio-recovery-gateway/gateway/server.py
+Restart=on-failure
+RestartSec=3
+User=root
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+ReadOnlyPaths=/etc/virtio-gateway
+
+[Install]
+WantedBy=multi-user.target
